@@ -18,7 +18,7 @@ This tutorial demonstrates performance testing for KServe inference services usi
 Create an InferenceService that exposes an gRPC port. The following serves the SciKit [irisv2 model](https://kserve.github.io/website/0.10/modelserving/v1beta1/sklearn/v2/#deploy-with-inferenceservice):
 
 ```shell
-cat <<EOF | kubectl create -f -
+cat <<EOF | kubectl apply -f -
 apiVersion: "serving.kserve.io/v1beta1"
 kind: "InferenceService"
 metadata:
@@ -41,7 +41,7 @@ EOF
 Verify that your inference service is ready.
 
 ```shell
-kubectl wait --for=condition=Ready --timeout=60s isvc/sklearn-irisv2
+kubectl wait --for=condition=Ready --timeout=600s isvc/sklearn-irisv2
 ```
 
 ## Install Iter8 CLI
@@ -59,7 +59,7 @@ Iter8 introduces the notion of an *experiment* that makes it easy to verify that
 iter8 k launch \
 --set "tasks={ready,grpc,assess}" \
 --set ready.isvc=sklearn-irisv2 \
---set ready.timeout=180s \
+--set ready.timeout=600s \
 --set grpc.protoURL=https://raw.githubusercontent.com/kserve/kserve/master/docs/predict-api/v2/grpc_predict_v2.proto \
 --set grpc.host=sklearn-irisv2-predictor-default.default.svc.cluster.local:80 \
 --set grpc.call=inference.GRPCInferenceService.ModelInfer \
